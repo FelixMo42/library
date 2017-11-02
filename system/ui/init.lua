@@ -1,0 +1,5 @@
+system.ui.color = require("system/ui/color")
+system.ui.object = require("system/ui/object")
+system.ui.button = require("system/ui/button")
+system.ui.menu = require("system/ui/menu")
+system.ui.font = require("system/ui/font")
