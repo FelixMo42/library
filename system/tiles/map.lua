@@ -11,7 +11,6 @@ local map = class:new({
 function map:__init()
 	for x = 1 , self.width do
 		self[x] = self[x] or {}
-		self.playerMap[x] = self.playerMap[x] or {}
 		for y = 1 , self.height do
 			self[x][y] = self[x][y] or (self.default or system.tiles.tile):new()
 			self[x][y].map = self
@@ -39,8 +38,8 @@ function map:draw()
 	--players
 	for y = sy , ey do
 		for x = sx , ex do
-			if self.playerMap[x][y] then
-				self.playerMap[x][y]:draw()
+			if self[x][y].player then
+				self[x][y].player:draw()
 			end
 		end
 	end
@@ -55,7 +54,7 @@ end
 function map:addPlayer(p, x, y)
 	p.x = x or p.x
 	p.y = y or p.y
-	if self.playerMap[p.x][p.y] then return false , self.playerMap[p.x][p.y] , p end
+	if self[p.x][p.y].player then return false , self[p.x][p.y].player , p end
 	p.map = self
 	self.players[#self.players + 1] = p
 	p.tile = self[p.x][p.y]
@@ -89,6 +88,8 @@ function map:setPos(x,y)
 		end
 	end
 end
+
+--load
 
 system.tiles.maps = {}
 

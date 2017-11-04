@@ -4,6 +4,8 @@ local skill = class:new({
 	level = 0
 })
 
+--load
+
 system.tiles.skills = {}
 
 return skill

@@ -32,19 +32,17 @@ end
 
 --functions
 
-function path:open(map , x,y , m)
-	m = m or {}
-	h = m.h or 0
-	if not map[x] or not map[x][y] then
-		return false , "tile out of range"
-	end
-	if h == 2 then return true , "success" end
-	if map[x][y].object and not map[x][y].object.walkable then
-		return false , "object in the way"
-	end
+function path:open(map , x,y , mode)
+	if not map[x] or not map[x][y] then return false end
+	local mode = mode or {}
 
-	if h == 1 then return true , "success" end
-	return map[x][y].walkable , "success"
+	if mode.height or 0 == 2 then return true end
+	if map[x][y].object and not map[x][y].object.walkable then return false end
+
+	if map[x][y].player then return false end
+
+	if mode.height or 0 == 1 then return true end
+	return map[x][y].walkable
 end
 
 function path:neighbours(map, node, tx,ty)
@@ -65,7 +63,7 @@ function path:neighbours(map, node, tx,ty)
 	return n
 end
 
-function path:find(map, sx,sy , ex,ey , m)
+function path:find(map, sx,sy , ex,ey , mode)
 	--setup
 	local open , closed = {} , {}
 	local current
@@ -97,18 +95,18 @@ function path:find(map, sx,sy , ex,ey , m)
 	return calc(map , open , closed , ex , ey)
 end
 
-function path:line(map, sx,sy , ex,ey , e)
+function path:line(map, sx,sy , ex,ey , mode)
+	mode = mode or {}
 	local open = true
 	local steps = math.max(math.abs(sx-ex),math.abs(sy-ey))
 	local x, y, p = 0, 0, 0
 	for step = 0 , steps do
 		p = step / steps
-		x = math.floor(sx * (1-p) + ex * (p))
-		y = math.floor(sy * (1-p) + ey * (p))
+		x = math.floor(sx * (1-p) + ex * p)
+		y = math.floor(sy * (1-p) + ey * p)
 		if x ~= sx or y ~= sy then
-			if e and x == ex and y == ey then break end
-			if map[x][y] == nil then break end
-			if not map[x][y]:open() then
+			if mode.last and x == ex and y == ey then break end
+			if not self:open(map,x,y,m) then
 				open = false
 				break
 			end

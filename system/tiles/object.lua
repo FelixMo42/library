@@ -11,6 +11,8 @@ function object:draw(x,y,s)
 	love.graphics.rectangle("fill",x,y,s,s)
 end
 
+--load
+
 system.tiles.objects = {}
 
 return object

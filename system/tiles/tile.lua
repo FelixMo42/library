@@ -31,11 +31,11 @@ end
 
 function tile:setPlayer(player)
 	self.player = player
-	self.map.playerMap[player.tile.x][player.tile.y] = nil
 	player.tile.player = nil
-	self.map.playerMap[self.x][self.y] = player
 	player.tile = self
 end
+
+--load
 
 system.tiles.tiles = {}
 
