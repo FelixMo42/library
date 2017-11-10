@@ -41,8 +41,8 @@ system.tiles.actions.move = action:new({
 		local self = self.player
 		self.px, self.py = self.px or self.gx, self.py or self.gy
 		local d = 1 / math.sqrt( (x - self.px) ^ 2 + (y - self.py) ^ 2 )
-	 	self.gx = self.gx + ( math.sign(x - self.px) * dt * system.tiles.setting.player.speed * d )
-		self.gy = self.gy + ( math.sign(y - self.py) * dt * system.tiles.setting.player.speed * d )
+	 	self.gx = self.gx + ( math.sign(x - self.px) * dt * system.settings.tiles.speed * d )
+		self.gy = self.gy + ( math.sign(y - self.py) * dt * system.settings.tiles.speed * d )
 		local cx = math.abs(self.gx - self.px) >= math.abs(x - self.px)
 		local cy = math.abs(self.gy - self.py) >= math.abs(y - self.py)
 		if cx and cy then

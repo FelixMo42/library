@@ -32,9 +32,9 @@ function player:__init()
 end
 
 function player:draw(x, y, s)
-	local x = x or (self.gx - self.map.x + 0.5) * system.tiles.setting.map.scale
-	local y = y or (self.gy - self.map.y + 0.5) * system.tiles.setting.map.scale
-	local s = s or system.tiles.setting.map.scale / 2
+	local x = x or (self.gx - self.map.x + 0.5) * system.settings.tiles.scale
+	local y = y or (self.gy - self.map.y + 0.5) * system.settings.tiles.scale
+	local s = s or system.settings.tiles.scale / 2
 	love.graphics.setColor(self.color)
 	love.graphics.circle("fill" , x , y , s , s )
 end

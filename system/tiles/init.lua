@@ -1,7 +1,8 @@
 system.update.include("lua")
 
+require "system/tiles/setting"
+
 system.tiles.path = require "system/tiles/path"
-system.tiles.setting = require "system/tiles/setting"
 system.tiles.skill = require "system/tiles/skill"
 system.tiles.action = require "system/tiles/action"
 system.tiles.item = require "system/tiles/item"
@@ -11,23 +12,23 @@ system.tiles.tile = require "system/tiles/tile"
 system.tiles.map = require "system/tiles/map"
 
 system.tiles.globolize = function(t)
-	tiles = system.tiles
-	setting = tiles.setting
-	map = tiles.map
+	settings = system.settings
 
-	skill = tiles.skill
-	ability = tiles.ability
-	map = tiles.map
-	player = tiles.player
-	item = tiles.item
-	object = tiles.object
-	tile = tiles.tile
+	path = system.tiles.path
 
-	skills = tiles.skills
-	actions = tiles.actions
-	maps = tiles.maps
-	players = tiles.players
-	items = tiles.items
-	objects = tiles.objects
-	tiles = tiles.tiles 
+	skill = system.tiles.skill
+	ability = system.tiles.ability
+	map = system.tiles.map
+	player = system.tiles.player
+	item = system.tiles.item
+	object = system.tiles.object
+	tile = system.tiles.tile
+
+	skills = system.tiles.skills
+	actions = system.tiles.actions
+	maps = system.tiles.maps
+	players = system.tiles.players
+	items = system.tiles.items
+	objects = system.tiles.objects
+	tiles = system.tiles.tiles
 end

@@ -10,12 +10,12 @@ local tile = class:new({
 
 function tile:draw(x,y,s)
 	--tile
-	local s = s or system.tiles.setting.map.scale
-	local x = x or (self.x - self.map.x) * system.tiles.setting.map.scale
-	local y = y or (self.y - self.map.y) * system.tiles.setting.map.scale
+	local s = s or system.settings.tiles.scale
+	local x = x or (self.x - self.map.x) * system.settings.tiles.scale
+	local y = y or (self.y - self.map.y) * system.settings.tiles.scale
 	love.graphics.setColor(color.green)
 	love.graphics.rectangle("fill",x,y,s,s)
-	if system.tiles.setting.map.line then
+	if system.settings.tiles.line then
 		love.graphics.setColor(color.black)
 		love.graphics.rectangle("line",x,y,s,s)
 	end

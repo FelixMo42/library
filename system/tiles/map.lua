@@ -26,9 +26,9 @@ end
 function map:draw()
 	local b = 0
 	local sx = math.max( math.floor( self.x ) - b , 1)
-	local ex = math.min( math.floor( self.x + screen.width / system.tiles.setting.map.scale ) + b , self.width )
+	local ex = math.min( math.floor( self.x + screen.width / system.settings.tiles.scale ) + b , self.width )
 	local sy = math.max( math.floor( self.y ) - b , 1 ) 
-	local ey = math.min( math.floor( self.y + screen.height / system.tiles.setting.map.scale ) + b , self.height )
+	local ey = math.min( math.floor( self.y + screen.height / system.settings.tiles.scale ) + b , self.height )
 	--tiles
 	for y = sy , ey do
 		for x = sx , ex do
@@ -54,12 +54,12 @@ end
 function map:addPlayer(p, x, y)
 	p.x = x or p.x
 	p.y = y or p.y
-	if self[p.x][p.y].player then return false , self[p.x][p.y].player , p end
+	if self[p.x][p.y].player then return false , self[p.x][p.y].player end
 	p.map = self
 	self.players[#self.players + 1] = p
 	p.tile = self[p.x][p.y]
-	self[p.x][p.y]:setPlayer(p)
-	return true , p , p
+	self[p.x][p.y].player = p
+	return true , p
 end
 
 function map:nextTurn()
@@ -74,15 +74,15 @@ end
 
 function map:setPos(x,y)
 	if x then
-		if setting.map.clamp then
-			self.x = math.clamp(x , 1 , self.width - screen.width / setting.map.scale + 1)
+		if system.settings.tiles.clamp then
+			self.x = math.clamp(x , 1 , self.width - screen.width / system.settings.tiles.scale + 1)
 		else
 			self.x = x
 		end
 	end
 	if y then
-		if setting.map.clamp then
-			self.y = math.clamp(y , 1 , self.height - screen.height / setting.map.scale + 1)
+		if system.settings.tiles.clamp then
+			self.y = math.clamp(y , 1 , self.height - screen.height / system.settings.tiles.scale + 1)
 		else
 			self.y = y
 		end

@@ -2,6 +2,8 @@ require "system/setup"
 
 class = require "system/class"
 
+--set up
+
 system.settings = setmetatable( {} , { __index = function(self,key) self[key] = {}; return self[key] end } )
 if love.conf then love.conf(system.settings) end
 
@@ -27,10 +29,22 @@ for i , lib in pairs(system.settings.update.includes or {}) do
 	system.update.include(lib)
 end
 
+--load
+
+setmetatable( system.load , {
+	__call = function()
+		local mt = getmetatable( system.load )
+		if not mt.__called then
+			for k , v in pairs( system.load ) do
+				v(k,v)
+			end
+		end
+	end,
+	__called = false
+} )
+
 if system.filesystem:exist("setup.lua") then
 	require "setup"
 end
 
-for k , v in pairs( system.load ) do
-	v(k,v)
-end
+system.load()
