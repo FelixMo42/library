@@ -17,7 +17,7 @@ system.tiles.globolize = function(t)
 	path = system.tiles.path
 
 	skill = system.tiles.skill
-	ability = system.tiles.ability
+	action = system.tiles.action
 	map = system.tiles.map
 	player = system.tiles.player
 	item = system.tiles.item

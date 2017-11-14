@@ -1,5 +1,5 @@
 local action = class:new({
-	type = "ability", name = "def",
+	type = "action", name = "def",
 	moveType = "main", moves = 1,
 	range = 1, height = 2,
 	cost = 0,

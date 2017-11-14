@@ -1,6 +1,6 @@
 local object = class:new({
 	type = "object",
-	child = {}
+	child = {active = true}
 })
 
 function object:dofunc(f, ...)
@@ -53,7 +53,8 @@ function object:addChild(c,i,n)
 	end
 	i = i or #self.child + 1
 	c.parent = self
-	table.insert(self.child , i , c)
+	self.child[i] = c
+	--table.insert(self.child , i , c)
 	return c
 end
 

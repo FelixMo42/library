@@ -63,6 +63,9 @@ function map:addPlayer(p, x, y)
 end
 
 function map:nextTurn()
+	if system.tabs.current then
+		system.tabs.current:dofunc("turn",self)
+	end
 	self.position = self.position + 1
 	if self.position > #self.players then
 		self.turn = self.turn + 1

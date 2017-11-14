@@ -81,6 +81,7 @@ button:addCallback("draw","outline",function(self)
 end )
 
 button:addCallback("draw","text",function(self)
+	love.graphics.setColor(self.textColor)
 	love.graphics.prints(self.text,self.x,self.y,self.width,self.height,self.textMode,self.textAligne)
 end )
 

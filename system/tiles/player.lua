@@ -5,10 +5,7 @@ local player = class:new({
 		str = 0, con = 0, dex = 0,
 	},
 	moves = {movement = 5, main = 1, sub = 2},
-	actions = {
-		system.tiles.actions.move,
-		system.tiles.actions.endTurn
-	},
+	actions = {},
 	x = 1, y = 1, gx = 1, gy = 1, px = 1, py = 1,
 	MP = 20, HP = 20,
 	queue = {}, ai = {},
@@ -29,6 +26,8 @@ function player:__init()
 			self.actions[key] = nil
 		end
 	end
+	self:addAction( system.tiles.actions.move:new() )
+	self:addAction( system.tiles.actions.endTurn:new() )
 end
 
 function player:draw(x, y, s)
@@ -60,7 +59,7 @@ function player:turn()
 end
 
 function player:addAction(action)
-	self.actions[action.id] = action
+	self.actions[action.id or action.name] = action
 	action.player = self
 end
 

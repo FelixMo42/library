@@ -66,7 +66,7 @@ table.set = function(t , n , s)
 	rawsetmetatable( t , debug.getmetatable(n) )
 end
 
-table.length = function(t)
+table.size = function(t)
 	l = 0
 	for k , v in pairs(t) do
 		l = l + 1

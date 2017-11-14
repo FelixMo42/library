@@ -44,6 +44,10 @@ local metaindex = {
 	__type = function(self)
 		if self.__type then return self.__type( self ) end
 		return self.type or "table"
+	end,
+	__tostring = function(self)
+		if self.__tostring then return self.__tostring( self ) end
+		return type(self)
 	end
 }
 
