@@ -53,8 +53,7 @@ function object:addChild(c,i,n)
 	end
 	i = i or #self.child + 1
 	c.parent = self
-	self.child[i] = c
-	--table.insert(self.child , i , c)
+	table.insert(self.child , i , c)
 	return c
 end
 

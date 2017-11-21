@@ -105,7 +105,7 @@ function path:line(map, sx,sy , ex,ey , mode)
 		x = math.floor(sx * (1-p) + ex * p)
 		y = math.floor(sy * (1-p) + ey * p)
 		if x ~= sx or y ~= sy then
-			if mode.last and x == ex and y == ey then break end
+			if not mode.last and x == ex and y == ey then break end
 			if not self:open(map,x,y,m) then
 				open = false
 				break

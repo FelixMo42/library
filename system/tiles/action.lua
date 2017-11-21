@@ -1,11 +1,20 @@
 local action = class:new({
 	type = "action", name = "def",
 	moveType = "main", moves = 1,
-	range = 1, height = 2,
-	cost = 0,
+	styles = {}, style = "bolt",
+	Dmin = 1, Dmax = 5, Dtype = "physical",
+	range = 1, width = 1, height = 2,
+	cost = 0, health = 0
 })
 
 --functions
+
+setmetatable( action.styles , {
+	__type = function() return "data" end,
+	__index = { add = function(self,name,value)
+		self[name] = value
+	end }
+} )
 
 function action:__call(x,y,...)
 	--cheak if possible
@@ -16,15 +25,29 @@ function action:__call(x,y,...)
 	if self.drawFunc then
 		self.player.queue:add(self, x,y)
 	end
-	if self.func then return self:func(x,y,...) or true end
-	return true
+	return (self.func or self.styles[self.style].func)(self , x,y , ...) or true
 end
 
 function action:cheak(x,y,...)
-	if not system.tiles.path:line(self.player.map , self.player.x,self.player.y , x,y , self) then return false end
+	if not (self.possible or self.styles[self.style].possible)( self , x,y , ... ) then return false end
 	if self.player.moves[self.moveType] < self.moves then return false end
 	return true
 end
+
+function action:damage(t)
+	t:HP( -math.random( self.Dmin , self.Dmax ) , self.Dtype , self.player )
+end
+
+action.styles:add( "bolt" , {
+	func = function(self,x,y,...)
+		if self.player.map[x][y].player then
+			self:damage( self.player.map[x][y].player )
+		end
+	end,
+	possible = function(self,x,y,...)
+		return system.tiles.path:line(self.player.map , self.player.x,self.player.y , x,y , self)
+	end
+})
 
 --load
 

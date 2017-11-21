@@ -7,6 +7,6 @@ local font = setmetatable( {} , {
 	end
 } )
 
-font.default = font[love.graphics.getFont():getHeight()]
+font.default = love.graphics.getFont()
 
 return font

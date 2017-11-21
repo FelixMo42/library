@@ -7,7 +7,8 @@ local player = class:new({
 	moves = {movement = 5, main = 1, sub = 2},
 	actions = {},
 	x = 1, y = 1, gx = 1, gy = 1, px = 1, py = 1,
-	MP = 20, HP = 20,
+	level = 1, xp = 0,
+	mp = 20, hp = 20,
 	queue = {}, ai = {},
 	color = color.blue
 })
@@ -15,11 +16,17 @@ local player = class:new({
 --functions
 
 function player:__init()
+	--set up graphics
 	self.gx, self.gy = self.x, self.y
 	self.px, self.py = self.x, self.y
+	self.maxHp , self.maxMp = self.hp , self.mp
+	--set up moves
+	local t = {}
+	setmetatable( self.moves , { __index = t } )
 	for k , v in pairs(self.moves) do
-		self.moves[k.."_max"] = v
+		t[k.."_max"] = v
 	end
+	--set up actions
 	for key , action in pairs(self.actions) do
 		if type(key) == "number" then
 			self:addAction( action:new() )
@@ -49,9 +56,7 @@ end
 
 function player:turn()
 	for k in pairs(self.moves) do
-		if not k:find("_max") then
-			self.moves[k] = self.moves[k.."_max"]
-		end
+		self.moves[k] = self.moves[k.."_max"]
 	end
 	if self.ai.turn then
 		self.ai.turn( self )
@@ -77,6 +82,16 @@ function player:useEnergy(type, amu)
 	end
 	self.map:nextTurn()
 	return false
+end
+
+function player:HP(a,t,s)
+	self.hp = math.min(self.hp + a , self.maxHp)
+	if self.hp <= 0 then
+		if s then
+			--s:addXP( self.xp )
+		end
+		self.map:removePlayer( self )
+	end
 end
 
 function player.queue:add(action,x,y,drawFunc)

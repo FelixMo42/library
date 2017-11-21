@@ -1,6 +1,9 @@
 system.update.include("lua")
 
-require "system/tiles/setting"
+system.settings.tiles.scale = system.settings.tiles.scale or 60
+system.settings.tiles.line = system.settings.tiles.line or true
+system.settings.tiles.clamp = system.settings.tiles.clamp or true
+system.settings.tiles.speed = system.settings.tiles.speed or 5
 
 system.tiles.path = require "system/tiles/path"
 system.tiles.skill = require "system/tiles/skill"

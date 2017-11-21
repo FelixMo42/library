@@ -1,9 +1,8 @@
 local map = class:new({
 	type = "map", name = "def",
-	players = {}, playerMap = {},
 	width = 100, height = 100,
-	turn = 1, position = 0,
-	x = 1, y = 1
+	players = {}, turn = 1, position = 0,
+	x = 1, y = 1,
 })
 
 --functions
@@ -62,10 +61,17 @@ function map:addPlayer(p, x, y)
 	return true , p
 end
 
-function map:nextTurn()
-	if system.tabs.current then
-		system.tabs.current:dofunc("turn",self)
+function map:removePlayer(p)
+	for i , player in pairs( self.players ) do
+		if player == p then
+			table.remove( self.players , i )
+		end
 	end
+	self[p.x][p.y].player = nil
+	p.tile.player = nil
+end
+
+function map:nextTurn()
 	self.position = self.position + 1
 	if self.position > #self.players then
 		self.turn = self.turn + 1
@@ -73,6 +79,9 @@ function map:nextTurn()
 	end
 	self.player = self.players[self.position]
 	self.player:turn()
+	if system.tabs.current then
+		system.tabs.current:dofunc("turn",self)
+	end
 end
 
 function map:setPos(x,y)
