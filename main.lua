@@ -1,5 +1,4 @@
 ::start::
-
 system = setmetatable( {} , { __index = function(self,key) self[key] = {}; return self[key] end } )
 
 system.update.directory = "Users/felixmo/Desktop/library/"
@@ -8,10 +7,10 @@ system.update.print = function(self,t)
 	love.graphics.present()
 end
 system.update.update = function(self,path)
-	local od = os.macDate(system.filesystem:execute( "stat -f %Sm "..(system.update.directory..path):gsub(" ","\\ ") ))
-	local ld = os.macDate(system.filesystem:execute( "stat -f %Sm "..(system.filesystem.directory..path):gsub(" ","\\ ") ))
+	local od = system.filesystem:execute( "stat -f %Sm "..(system.update.directory..path):gsub(" ","\\ ") )
+	local ld = system.filesystem:execute( "stat -f %Sm "..(system.filesystem.directory..path):gsub(" ","\\ ") )
 
-	if ld < od then
+	if ld == "" or os.macDate(ld) < os.macDate(od) then
 		system.update:print("updating "..path)
 		for i = #path , 1 , -1 do
 			if path:sub(i,i) == "/" then
