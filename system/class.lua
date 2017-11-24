@@ -11,12 +11,7 @@ local metamethode = {
 	__index = function(self , key)
 		local mt = getmetatable(self)
 		if mt.__get then return mt.__get(self , key) end
-		if mt.__getter[key] then
-			if type(mt.__getter[key]) == "function" then
-				return mt.__getter[key](self , key)
-			end
-			return mt.__getter[key]
-		end
+		if mt.__getter[key] then return mt.__getter[key](self , key) end
 		if mt.__values[key] then return mt.__values[key] end
 	end,
 	__newindex = function(self , key , value)

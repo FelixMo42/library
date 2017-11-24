@@ -36,6 +36,20 @@ end
 
 local getter = {}
 
+function button:__get(key)
+	if getter[key] then return getter[key](self,key) end
+	local mt = getmetatable(self)
+	if mt.__getter[key] then return mt.__getter[key](self,key) end
+	if type(key) == "string" and key:find("_") then
+		if key:sub(1,1) == "_" then
+			return mt.__values[key:sub(2)]
+		else
+			return mt.__values[key]
+		end
+	end
+	return modeget(self , key)
+end
+
 getter.x = function(self)
 	local x = calc(modeget(self , "x"))
 	return (system.screen.width * self.sx) + ( x - ( self.bl or ( (self.bw or self.b) / 2 ) ) )
@@ -56,20 +70,6 @@ getter.height = function(self)
 	return (system.screen.height * self.ey) + ( h + (self.bd or self.bh or self.b) + (self.bu or 0) )
 end
 
-button.__get = function(self , key)
-	if getter[key] then return getter[key](self,key) end
-	local mt = getmetatable(self)
-	if mt.__getter[key] then return mt.__getter[key](self,key) end
-	if type(key) == "string" and key:find("_") then
-		if key:sub(1,1) == "_" then
-			return mt.__values[key:sub(2)]
-		else
-			return mt.__values[key]
-		end
-	end
-	return modeget(self , key)
-end
-
 button:addCallback("draw","body",function(self)
 	love.graphics.setColor(self.bodyColor)
 	love.graphics.rectangle("fill",self.x,self.y,self.width,self.height,self.edge or 0)
@@ -81,6 +81,9 @@ button:addCallback("draw","outline",function(self)
 end )
 
 button:addCallback("draw","text",function(self)
+	if self.font then
+		love.graphics.setFont( self.font )
+	end
 	love.graphics.setColor(self.textColor)
 	love.graphics.prints(self.text,self.x,self.y,self.width,self.height,self.textMode,self.textAligne)
 end )

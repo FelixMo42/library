@@ -1,4 +1,3 @@
-::start::
 system = setmetatable( {} , { __index = function(self,key) self[key] = {}; return self[key] end } )
 
 system.update.directory = "Users/felixmo/Desktop/library/"
@@ -78,9 +77,7 @@ end
 
 if system.filesystem.isApp then return require("system") end
 
-if system.update:update("main.lua") then
-	goto start
-end
+system.update:update("main.lua")
 
 for i , path in pairs(system.filesystem:getDirectory(system.update.directory.."system/")) do
 	if not system.filesystem:isDirectory( system.update.directory.."system/"..path ) then
