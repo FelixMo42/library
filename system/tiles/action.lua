@@ -29,7 +29,7 @@ function action:__call(x,y,...)
 end
 
 function action:cheak(x,y,...)
-	if not (self.possible or self.styles[self.style].possible)( self , x,y , ... ) then return false end
+	if not (self.possible or self.styles[self.style].possible)(self , x,y , ...) then return false end
 	if self.player.moves[self.moveType] < self.moves then return false end
 	return true
 end
@@ -56,7 +56,7 @@ system.tiles.actions = {}
 system.tiles.actions.move = action:new({
 	id = "move", name = "move",
 	moveType = "movement",
-	height = 0,
+	height = 0, last = true,
 	func = function(self,x,y)
 		self.player:setPos(x,y)
 	end,

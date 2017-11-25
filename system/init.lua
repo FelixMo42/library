@@ -16,7 +16,6 @@ if system.settings.update.default or system.settings.update.default == nil then
 	system.update.include("ui")
 	system.update.globalize("ui")
 	
-	button = ui.button
 	color = ui.color
 	font = ui.font
 

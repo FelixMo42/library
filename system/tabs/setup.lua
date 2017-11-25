@@ -157,6 +157,6 @@ system.load["tabs"] = function()
 	end
 
 	if not system.tabs.current then
-		system.tabs.current = system.tabs.def or system.tabs.menu or system.tabs[1] or system.tabs.console:new()
+		system.tabs.current = system.tabs.def or system.tabs.menu or system.tabs[1] or system.console:new()
 	end
 end

@@ -36,12 +36,11 @@ function path:open(map , x,y , mode)
 	if not map[x] or not map[x][y] then return false end
 	local mode = mode or {}
 
-	if mode.height or 0 == 2 then return true end
+	if (mode.height or 0) == 2 then return true end
 	if map[x][y].object and not map[x][y].object.walkable then return false end
-
 	if map[x][y].player then return false end
 
-	if mode.height or 0 == 1 then return true end
+	if (mode.height or 0) == 1 then return true end
 	return map[x][y].walkable
 end
 
@@ -96,7 +95,8 @@ function path:find(map, sx,sy , ex,ey , mode)
 end
 
 function path:line(map, sx,sy , ex,ey , mode)
-	mode = mode or {}
+	if not map[ex] or not map[ex][ey] then return false , -1 , -1 , -1 , -1 end
+	local mode = mode or {}
 	local open = true
 	local steps = math.max(math.abs(sx-ex),math.abs(sy-ey))
 	local x, y, p = 0, 0, 0
@@ -106,7 +106,7 @@ function path:line(map, sx,sy , ex,ey , mode)
 		y = math.floor(sy * (1-p) + ey * p)
 		if x ~= sx or y ~= sy then
 			if not mode.last and x == ex and y == ey then break end
-			if not self:open(map,x,y,m) then
+			if not self:open(map,x,y,mode) then
 				open = false
 				break
 			end

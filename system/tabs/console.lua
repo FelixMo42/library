@@ -35,6 +35,7 @@ function console:draw()
 end
 
 function console:msg(i)
+	if not self.log[i] then return "" end
 	local text = ""
 	for i , v in pairs( self.log[i] ) do
 		if type(v) == "function" then
