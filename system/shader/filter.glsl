@@ -2,7 +2,7 @@ extern vec2 step;
 extern vec3 color;
 extern mat3 kernel;
 
-vec4 effect( vec4 col, Image texture, vec2 texturePos, vec2 screenPos ) {
+vec4 effect(vec4 col, Image texture, vec2 texturePos, vec2 screenPos) {
 	number alpha = 0;
 
 	alpha += kernel[0][0] * texture2D( texture, texturePos + vec2( -step.x, -step.y ) ).a;

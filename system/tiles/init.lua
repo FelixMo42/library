@@ -35,3 +35,34 @@ system.tiles.globolize = function(t)
 	objects = system.tiles.objects
 	tiles = system.tiles.tiles
 end
+
+function system.tiles:save(data)
+	if data.save then return data:save() end
+	local s = "return system.tiles."..data.type..":new({"
+	local t = {}
+	for k , v in pairs(data) do
+		if table.format( data[k] ) ~= table.format( system.tiles[data.type][k] ) then
+			s = table.format(k , s.."[" , t)
+			s = table.format(v , s.."] = " , t)..", "
+		end
+	end
+	system.filesystem:write(data.type.."s/"..data.file..".lua" , s.."})")
+	return s.."})"
+end
+
+function system.tiles:load(class)
+	for i , n in ipairs(self:getDirectory(class,".lua")) do
+		system.tiles[class][ #system.tiles[class] + 1 ] = loadstring( system.filesystem.read(class.."/"..n) )
+		system.tiles[class][ system.tiles[class][ #system.tiles[class] ].name ] = system.tiles[class][ #system.tiles[class] ]
+		system.tiles[class][ system.tiles[class][ #system.tiles[class] ].id ] = system.tiles[class][ #system.tiles[class] ]
+		system.tiles[class][ system.tiles[class][ #system.tiles[class] ].file ] = system.tiles[class][ #system.tiles[class] ]
+		system.tiles[class][ system.tiles[class][ #system.tiles[class] ] ] = system.tiles[class][ #system.tiles[class] ]
+	end
+end
+
+function system.tiles:loadAll()
+	local classes = {"skill","action","item","object","player","tile","map"}
+	for i , c in pairs( classes ) do
+		self:load( c )
+	end
+end

@@ -30,7 +30,7 @@ local metaindex = {
 		if self.__copy then return self.__copy( self ) end
 		return table.copy( self )
 	end,
-	__new = function(self , t)
+	__new = function(self, t)
 		if self.__new then return self.__new( self ) end
 		for k , v in pairs(t or {}) do
 			self[k] = v
@@ -43,6 +43,9 @@ local metaindex = {
 	__tostring = function(self)
 		if self.__tostring then return self.__tostring( self ) end
 		return type(self)
+	end,
+	__next = function(self, value)
+		return next(getmetatable(self).__values , value)
 	end
 }
 
@@ -74,11 +77,8 @@ end
 local class = setmetatable( {} , metatable )
 
 function getgetter(self , k) return getmetatable(self).__getter[k] end
-
 function setgetter(self , k , v) getmetatable(self).__getter[k] = v; return self end
-
 function getsetter(self , k) return getmetatable(self).__setter[k] end
-
 function setsetter(self , k , v) getmetatable(self).__setter[k] = v; return self end
 
 setgetter( class , "new" , function()

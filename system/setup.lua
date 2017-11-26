@@ -89,18 +89,26 @@ end
 
 --setup
 
-local function rawipairs(t, var)
+function inext(t, var)
 	var = var + 1
 	local value = t[var]
 	if value == nil then return end
 	return var, value
 end
 
-function ipairs(t) return rawipairs, t, 0 end
+function ipairs(t,...)
+	local mt = getmetatable(t)
+	if mt and mt["__ipairs"] then return mt["__ipairs"](t,...) end 
+	return inext, t, 0
+end
 
 rawpairs = pairs
 
-function pairs(t) return next, t, nil end
+function pairs(t,...)
+	local mt = getmetatable(t)
+	if mt and mt["__pairs"] then return mt["__pairs"](t,...) end 
+	return next, t, nil
+end
 
 system.update.addmetamethod("next")
 system.update.addmetamethod("setmetatable")
