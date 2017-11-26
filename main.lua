@@ -8,7 +8,6 @@ end
 system.update.update = function(self,path)
 	local od = system.filesystem:execute( "stat -f %Sm "..(system.update.directory..path):gsub(" ","\\ ") )
 	local ld = system.filesystem:execute( "stat -f %Sm "..(system.filesystem.directory..path):gsub(" ","\\ ") )
-
 	if ld == "" or os.macDate(ld) < os.macDate(od) then
 		system.update:print("updating "..path)
 		for i = #path , 1 , -1 do
@@ -19,7 +18,6 @@ system.update.update = function(self,path)
 		end
 		system.filesystem:write( path , system.filesystem:read( system.update.directory..path ) )
 	end
-
 	return ld < od
 end
 
@@ -78,7 +76,6 @@ end
 if system.filesystem.isApp then return require("system") end
 
 system.update:update("main.lua")
-
 for i , path in pairs(system.filesystem:getDirectory(system.update.directory.."system/")) do
 	if not system.filesystem:isDirectory( system.update.directory.."system/"..path ) then
 		system.update:update( "system/"..path )

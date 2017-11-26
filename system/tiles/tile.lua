@@ -35,6 +35,12 @@ function tile:setPlayer(player)
 	player.tile = self
 end
 
+function tile:saveData()
+	for k , v in pairs(self) do
+		
+	end	
+end
+
 --load
 
 system.tiles.tiles = {}
