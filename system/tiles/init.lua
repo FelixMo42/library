@@ -38,7 +38,7 @@ end
 
 function system.tiles:save(data)
 	if data.save then return data:save() end
-	data.file = data.file or data.name:sub(1,2)..(#system.filesystem:getDirectory("data/"..class.."s" , ".lua") + 1)
+	data.file = data.file or data.type:sub(1,1):upper()..(#system.filesystem:getDirectory("data/"..data.type.."s" , ".lua") + 1)
 	local s = "return system.tiles."..data.type..":new({"
 	local t = {}
 	for k , v in pairs(data) do
@@ -47,27 +47,35 @@ function system.tiles:save(data)
 			s = table.format(v , s.."] = " , t)..", "
 		end
 	end
-	system.filesystem:write(data.type.."s/"..data.file..".lua" , s.."})")
+	system.filesystem:write("data/"..data.type.."s/"..data.file..".lua" , s.."})")
 	return s.."})"
 end
 
 function system.tiles:load(class)
+	system.tiles[class] = {}
 	for i , file in ipairs( system.filesystem:getDirectory("data/"..class , ".lua") ) do
-		system.tiles[class][#system.tiles[class] + 1] = loadstring( system.filesystem:read("data/"..class.."/"..file) )()
-		system.tiles[class][system.tiles[class][#system.tiles[class]]] = system.tiles[class][#system.tiles[class]]
-		system.tiles[class][system.tiles[class][#system.tiles[class]].file:gsub(".lua","")] = system.tiles[class][#system.tiles[class]]
-		if system.tiles[class][#system.tiles[class]].name then
-			system.tiles[class][system.tiles[class][#system.tiles[class]].name] = system.tiles[class][#system.tiles[class]]
-		end
-		if system.tiles[class][#system.tiles[class]].id then
-			system.tiles[class][system.tiles[class][#system.tiles[class]].id ] = system.tiles[class][#system.tiles[class]]
-		end
+		self:addClass( loadstring( system.filesystem:read("data/"..class.."/"..file) )() )
 	end
 end
 
 function system.tiles:loadAll()
-	local classes = {"skill","action","item","object","player","tile","map"}
+	local classes = {"skills","actions","items","objects","players","tiles","maps"}
 	for i , c in pairs( classes ) do
 		self:load( c )
+	end
+end
+
+function system.tiles:addClass(data)
+	local class = data.type.."s"
+	system.tiles[class][#system.tiles[class] + 1] = data
+	system.tiles[class][data] = data
+	if data.name then
+		system.tiles[class][data.name] = data
+	end
+	if data.id then
+		system.tiles[class][system.tiles[class][#system.tiles[class]].id ] = data
+	end
+	if data.file then
+		system.tiles[class][data.file] = data
 	end
 end

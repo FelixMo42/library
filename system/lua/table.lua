@@ -33,13 +33,13 @@ function table.add(self,item,i,name)
     if type(i) == "string" then
         self[i] = item
         i = name
-    elseif name then
+    end
+    if name then
         self[name] = item
     end
-    if i == -1 then
+    i = i or #self + 1
+    if i < 0 then
         i = #self + 2 - i
-    else
-        i = i or #self + 1
     end
     table.insert(self,i,item)
     return item

@@ -91,6 +91,10 @@ end
 --setup
 
 function inext(t, var)
+	if not t then
+		love.errhand("ipairs expectes table")
+		love.event.quit()
+	end
 	var = var + 1
 	local value = t[var]
 	if value == nil then return end
