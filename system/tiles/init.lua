@@ -67,15 +67,15 @@ end
 
 function system.tiles:addClass(data)
 	local class = data.type.."s"
-	system.tiles[class][#system.tiles[class] + 1] = data
-	system.tiles[class][data] = data
+	self[class][data] = data
+	self[class][#self[class] + 1] = data
 	if data.name then
-		system.tiles[class][data.name] = data
+		self[class][data.name] = data
 	end
 	if data.id then
-		system.tiles[class][system.tiles[class][#system.tiles[class]].id ] = data
+		self[class][data.id] = data
 	end
 	if data.file then
-		system.tiles[class][data.file] = data
+		self[class][data.file] = data
 	end
 end
