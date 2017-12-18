@@ -22,6 +22,16 @@ function map:__init()
 	end
 end
 
+function map:__tostring()
+	local s = "system.tiles."
+	if self.file then
+		s = s.."maps."..self.file..":new({"
+	else
+		s = s.."map:new({"
+	end
+	return s.."})"
+end
+
 function map:draw()
 	local b = 0
 	local sx = math.max( math.floor( self.x ) - b , 1)
@@ -80,6 +90,15 @@ function map:setTile(t,sx,sy,ex,ey)
 	end
 end
 
+function map:setObject(o,sx,sy,ex,ey)
+	ex , ey = ex or sx , ey or sy
+	for x = sx , ex , o.width * (math.sign(ex - sx) == 0 and 1 or math.sign(ex - sx)) do
+		for y = sy , ey , o.height * (math.sign(ey - sy) == 0 and 1 or math.sign(ey - sy)) do
+			self[x][y]:setObject( o:new() )
+		end
+	end
+end
+
 function map:setPos(x,y)
 	if x then
 		if system.settings.tiles.clamp then
@@ -112,6 +131,20 @@ function map:nextTurn()
 	if system.tabs.current then
 		system.tabs.current:dofunc("turn",self)
 	end
+end
+
+function map:save()
+	return system.tiles:format(self, {
+		get = function(x)
+			if type(x) ~= "number" then return nil end
+			if x > self.width then return "" end
+			local s = "\n["..x.."] = {"
+			for y = 1, self.height do
+				s = s.."["..y.."] = "..tostring( self[x][y] )..", "
+			end
+			return s.."}"
+		end
+	})
 end
 
 --load
