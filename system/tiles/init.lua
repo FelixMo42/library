@@ -16,7 +16,6 @@ system.tiles.map = require "system/tiles/map"
 
 function system.tiles:globolize()
 	settings = system.settings
-
 	path = system.tiles.path
 
 	skill = system.tiles.skill
@@ -63,14 +62,14 @@ function system.tiles:save(data, exceptions)
 end
 
 function system.tiles:load(class)
-	system.tiles[class] = {}
+	table.set( system.tiles[class] , {} )
 	for i , file in ipairs( system.filesystem:getDirectory("data/"..class , ".lua") ) do
 		self:addClass( loadstring( system.filesystem:read("data/"..class.."/"..file) )() )
 	end
 end
 
 function system.tiles:loadAll()
-	local classes = {"skills","actions","items","objects","players","tiles","maps"}
+	local classes = {"skills","items","objects","players","tiles","maps"} --add back actions eventualy
 	for i , c in pairs( classes ) do
 		self:load( c )
 	end

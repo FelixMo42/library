@@ -11,10 +11,11 @@ function map:__init()
 	for x = 1 , self.width do
 		self[x] = self[x] or {}
 		for y = 1 , self.height do
-			self[x][y] = self[x][y] or (self.default or system.tiles.tile):new()
+			self[x][y] = self[x][y] or (self.default or system.tiles.tile):new({isDefault = true})
 			self[x][y].map = self
 			self[x][y].x = x
 			self[x][y].y = y
+			self[x][y]:init()
 		end
 	end
 	if #self.players > 0 then
@@ -92,9 +93,40 @@ end
 
 function map:setObject(o,sx,sy,ex,ey)
 	ex , ey = ex or sx , ey or sy
-	for x = sx , ex , o.width * (math.sign(ex - sx) == 0 and 1 or math.sign(ex - sx)) do
-		for y = sy , ey , o.height * (math.sign(ey - sy) == 0 and 1 or math.sign(ey - sy)) do
+	local dx = (math.sign(ex - sx) == 0 and 1 or math.sign(ex - sx))
+	local dy = (math.sign(ey - sy) == 0 and 1 or math.sign(ey - sy))
+	local bx = dx == 1 and o.width - 1 or 0
+	local by = dy == 1 and o.height - 1 or 0
+	for x = sx + bx, ex + bx, o.width * dx do
+		for y = sy + by, ey + by, o.height * dy do
 			self[x][y]:setObject( o:new() )
+		end
+	end
+end
+
+function map:deletObject(sx,sy,ex,ey)
+	ex , ey = ex or sx , ey or sy
+	for x = sx, ex, (math.sign(ex - sx) == 0 and 1 or math.sign(ex - sx)) do
+		for y = sy, ey, (math.sign(ey - sy) == 0 and 1 or math.sign(ey - sy)) do
+			self[x][y]:deletObject()
+		end
+	end
+end
+
+function map:setItem(i,sx,sy,ex,ey)
+	ex , ey = ex or sx , ey or sy
+	for x = sx, ex, (math.sign(ex - sx) == 0 and 1 or math.sign(ex - sx)) do
+		for y = sy, ey, (math.sign(ey - sy) == 0 and 1 or math.sign(ey - sy)) do
+			self[x][y]:setItem( i:new() )
+		end
+	end
+end
+
+function map:deletItem(sx,sy,ex,ey)
+	ex , ey = ex or sx , ey or sy
+	for x = sx, ex, (math.sign(ex - sx) == 0 and 1 or math.sign(ex - sx)) do
+		for y = sy, ey, (math.sign(ey - sy) == 0 and 1 or math.sign(ey - sy)) do
+			self[x][y]:deletItem()
 		end
 	end
 end
@@ -126,8 +158,10 @@ function map:nextTurn()
 		self.turn = self.turn + 1
 		self.position = 1
 	end
-	self.player = self.players[self.position]
-	self.player:turn()
+	if #self.players ~= 0 then
+		self.player = self.players[self.position]
+		self.player:turn()
+	end
 	if system.tabs.current then
 		system.tabs.current:dofunc("turn",self)
 	end

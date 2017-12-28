@@ -19,7 +19,7 @@ end
 
 function object:draw(x,y,s)
 	love.graphics.setColor(self.color)
-	love.graphics.rectangle("fill",x,y,s,s)
+	love.graphics.rectangle("fill",x - s * (self.width - 1),y - s * (self.height - 1),s * self.width,s * self.height)
 end
 
 --load
