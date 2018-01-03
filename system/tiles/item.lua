@@ -6,13 +6,7 @@ local item = class:new({
 --functions
 
 function item:__tostring()
-	local s = "system.tiles."
-	if self.file then
-		s = s.."items."..self.file..":new({"
-	else
-		s = s.."item:new({"
-	end
-	return s.."})"
+	return system.tiles:tostring( self )
 end
 
 function item:draw(x,y,s)

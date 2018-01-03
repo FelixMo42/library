@@ -34,11 +34,13 @@ function love.open(t,...)
 	system.tabs.current:dofunc("close",...)
 	if type(t) == "tab" then
 		system.tabs.current = t
-		system.tabs.current:dofunc("open",...)
-	else
+	elseif system.tabs[t] then
 		system.tabs.current = system.tabs[t]
-		system.tabs.current:dofunc("open",...)
+	else
+		love.errhand( tostring(t).." is not a tab")
+		return false
 	end
+	system.tabs.current:dofunc("open",...)
 end
 
 function love.load(...)

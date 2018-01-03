@@ -35,8 +35,15 @@ end
 
 --table
 
+function table.rawclear(self)
+	debug.setmetatable( self , {} )
+	for k , v in pairs(self) do
+        self[k] = nil
+    end
+end
+
 function table.set(self, new)
-    debug.setmetatable( self , {} )
+    table.rawclear(self)
     for k , v in rawpairs(new) do
         self[k] = v
     end

@@ -8,13 +8,7 @@ local object = class:new({
 --functions
 
 function object:__tostring()
-	local s = "system.tiles."
-	if self.file then
-		s = s.."objects."..self.file..":new({"
-	else
-		s = s.."object:new({"
-	end
-	return s.."})"
+	return system.tiles:tostring( self )
 end
 
 function object:draw(x,y,s)

@@ -29,13 +29,7 @@ function action:__call(x,y,...)
 end
 
 function action:__tostring()
-	local s = "system.tiles."
-	if self.file then
-		s = s.."actions."..self.file..":new({"
-	else
-		s = s.."action:new({"
-	end
-	return s.."})"
+	return system.tiles:tostring( self )
 end
 
 function action:cheak(x,y,...)

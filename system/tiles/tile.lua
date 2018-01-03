@@ -8,22 +8,17 @@ local tile = class:new({
 --functions
 
 function tile:__tostring()
-	local s = "system.tiles."
-	if self.file then
-		s = s.."tiles."..self.file..":new({"
-	else
-		s = s.."tile:new({"
-	end
-	if self.player then
-		s = s.."player = "..tostring( self.player )..", "
-	end
-	if self.object and self.object.tile == self then
-		s = s.."object = "..tostring( self.object )..", "
-	end
-	if self.item then
-		s = s.."item = "..tostring( self.item )..", "
-	end
-	return s.."})"
+	return system.tiles:tostring( self , {
+		object = function(self, k, v)
+			if v.tile == self then
+				return "object = "..tostring( self.object )
+			end
+			return ""
+		end,
+		map = function() return "" end,
+		x = function() return "" end,
+		y = function() return "" end
+	} )
 end
 
 function tile:init()
@@ -92,6 +87,7 @@ function tile:setItem(item)
 end
 
 function tile:deletItem()
+	if not self.item then return end
 	self.item.tile = nil
 	self.item = nil
 end

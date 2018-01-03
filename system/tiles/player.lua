@@ -38,13 +38,7 @@ function player:__init()
 end
 
 function player:__tostring()
-	local s = "system.tiles."
-	if self.file then
-		s = s.."players."..self.file..":new({"
-	else
-		s = s.."player:new({"
-	end
-	return s.."})"
+	return system.tiles:tostring( self )
 end
 
 function player:draw(x, y, s)

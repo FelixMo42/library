@@ -24,13 +24,7 @@ function map:__init()
 end
 
 function map:__tostring()
-	local s = "system.tiles."
-	if self.file then
-		s = s.."maps."..self.file..":new({"
-	else
-		s = s.."map:new({"
-	end
-	return s.."})"
+	return system.tiles:tostring( self )
 end
 
 function map:draw()
@@ -61,13 +55,10 @@ function map:update(dt)
 	end
 end
 
-function map:addPlayer(p, x, y)
-	p.x = x or p.x
-	p.y = y or p.y
+function map:addPlayer(p)
 	if self[p.x][p.y].player then return false , self[p.x][p.y].player end
-	p.map = self
+	p.map , p.tile = self , self[p.x][p.y]
 	self.players[#self.players + 1] = p
-	p.tile = self[p.x][p.y]
 	self[p.x][p.y].player = p
 	return true , p
 end
@@ -82,10 +73,33 @@ function map:removePlayer(p)
 	p.tile.player = nil
 end
 
-function map:setTile(t,sx,sy,ex,ey)
+function map:setPlayer(p,sx,sy,ex,ey)
 	ex , ey = ex or sx , ey or sy
 	for x = sx , ex , math.sign(ex - sx) == 0 and 1 or math.sign(ex - sx) do
 		for y = sy , ey , math.sign(ey - sy) == 0 and 1 or math.sign(ey - sy) do
+			if self[p.x][p.y].player then
+				self:removePlayer( self[p.x][p.y].player )
+			end
+			self:addPlayer( p:new({x = x, y = y}) )
+		end
+	end
+end
+
+function map:deletPlayer(sx,sy,ex,ey)
+	ex , ey = ex or sx , ey or sy
+	for x = sx, ex, (math.sign(ex - sx) == 0 and 1 or math.sign(ex - sx)) do
+		for y = sy, ey,  (math.sign(ey - sy) == 0 and 1 or math.sign(ey - sy)) do
+			if self[p.x][p.y].player then
+				self:removePlayer( self[x][y].player )
+			end
+		end
+	end
+end
+
+function map:setTile(t,sx,sy,ex,ey)
+	ex , ey = ex or sx , ey or sy
+	for x = sx , ex , (math.sign(ex - sx) == 0 and 1 or math.sign(ex - sx)) do
+		for y = sy , ey , (math.sign(ey - sy) == 0 and 1 or math.sign(ey - sy)) do
 			table.set( self[x][y] , self[x][y]:new( t ) )
 		end
 	end
@@ -169,7 +183,7 @@ end
 
 function map:save()
 	return system.tiles:format(self, {
-		get = function(x)
+		get = function(self, x)
 			if type(x) ~= "number" then return nil end
 			if x > self.width then return "" end
 			local s = "\n["..x.."] = {"
