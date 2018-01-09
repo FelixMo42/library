@@ -8,7 +8,9 @@ local object = class:new({
 --functions
 
 function object:__tostring()
-	return system.tiles:tostring( self )
+	return system.tiles:tostring( self , {
+		tile = function() return "" end
+	} )
 end
 
 function object:draw(x,y,s)

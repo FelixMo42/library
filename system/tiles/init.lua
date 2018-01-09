@@ -45,17 +45,16 @@ function system.tiles:tostring(data, exceptions)
 		s = s..":new({"
 		def = system.tiles[data.type]:new()
 	end
-	local t = {}
 	for k , v in pairs(data) do
-		local c = exceptions and ( (exceptions[k] or exceptions.get or function() end)(data, k, v) )
+		local c = exceptions and ( (exceptions[k] or exceptions.get or function() end)(data, k, v, def) )
 		if c ~= nil then
 			if c ~= "" and c ~= " "  then
 				s = s..c..", "
 			end
 		else
 			if table.format( data[k] ) ~= table.format( def[k] ) then
-				s = table.format(k , s.."[" , t)
-				s = table.format(v , s.."] = " , t)..", "
+				s = table.format(k , s.."[")
+				s = table.format(v , s.."] = ")..", "
 			end
 		end
 	end
@@ -65,17 +64,16 @@ end
 function system.tiles:format(data, exceptions)
 	local s = "return system.tiles."..data.type..":new({"
 	local def = system.tiles[data.type]:new()
-	local t = {}
 	for k , v in pairs(data) do
-		local c = exceptions and ( (exceptions[k] or exceptions.get or function() end)(data, k, v) )
+		local c = exceptions and ( (exceptions[k] or exceptions.get or function() end)(data, k, v, def) )
 		if c ~= nil then
 			if c ~= "" and c ~= " "  then
 				s = s..c..", "
 			end
-		else
+		elseif type( v ) ~= "function" then
 			if table.format( data[k] ) ~= table.format( def[k] ) then
-				s = table.format(k , s.."[" , t)
-				s = table.format(v , s.."] = " , t)..", "
+				s = table.format(k , s.."[")
+				s = table.format(v , s.."] = ")..", "
 			end
 		end
 	end

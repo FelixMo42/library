@@ -12,10 +12,7 @@ function map:__init()
 		self[x] = self[x] or {}
 		for y = 1 , self.height do
 			self[x][y] = self[x][y] or (self.default or system.tiles.tile):new({isDefault = true})
-			self[x][y].map = self
-			self[x][y].x = x
-			self[x][y].y = y
-			self[x][y]:init()
+			self:setupTile(x,y)
 		end
 	end
 	if #self.players > 0 then
@@ -54,6 +51,46 @@ function map:update(dt)
 		player:update(dt)
 	end
 end
+
+--tile
+
+function map:setTile(t,sx,sy,ex,ey)
+	ex , ey = ex or sx , ey or sy
+	for x = sx , ex , (math.sign(ex - sx) == 0 and 1 or math.sign(ex - sx)) do
+		for y = sy , ey , (math.sign(ey - sy) == 0 and 1 or math.sign(ey - sy)) do
+			table.set( self[x][y] , self[x][y]:new( t ) )
+		end
+	end
+end
+
+function map:setDefault(sx,sy,ex,ey)
+	local tile = (self.default or system.tiles.tile):new({isDefault = true})
+	self:setTile( tile ,sx,sy,ex,ey)
+end
+
+function map:setupTile(x,y)
+	self[x][y].map = self
+	self[x][y].x = x
+	self[x][y].y = y
+	self[x][y]:init()
+end
+
+function map:expand(w,h)
+	for x = 1, w do
+		self[x] = self[x] or {}
+		for y = 1, h do
+			if not self[x][y] then
+				self[x][y] = (self.default or system.tiles.tile):new({isDefault = true})
+				self[x][y].map = self
+				self[x][y].x = x
+				self[x][y].y = y
+				self[x][y]:init()
+			end
+		end
+	end
+end
+
+--player
 
 function map:addPlayer(p)
 	if self[p.x][p.y].player then return false , self[p.x][p.y].player end
@@ -96,14 +133,7 @@ function map:deletPlayer(sx,sy,ex,ey)
 	end
 end
 
-function map:setTile(t,sx,sy,ex,ey)
-	ex , ey = ex or sx , ey or sy
-	for x = sx , ex , (math.sign(ex - sx) == 0 and 1 or math.sign(ex - sx)) do
-		for y = sy , ey , (math.sign(ey - sy) == 0 and 1 or math.sign(ey - sy)) do
-			table.set( self[x][y] , self[x][y]:new( t ) )
-		end
-	end
-end
+--object
 
 function map:setObject(o,sx,sy,ex,ey)
 	ex , ey = ex or sx , ey or sy
@@ -127,6 +157,8 @@ function map:deletObject(sx,sy,ex,ey)
 	end
 end
 
+--item
+
 function map:setItem(i,sx,sy,ex,ey)
 	ex , ey = ex or sx , ey or sy
 	for x = sx, ex, (math.sign(ex - sx) == 0 and 1 or math.sign(ex - sx)) do
@@ -144,6 +176,8 @@ function map:deletItem(sx,sy,ex,ey)
 		end
 	end
 end
+
+--positioning
 
 function map:setPos(x,y)
 	if x then
@@ -165,6 +199,8 @@ end
 function map:move(dx,dy)
 	self:setPos(self.x - dx , self.y - dy)
 end
+
+--outher
 
 function map:nextTurn()
 	self.position = self.position + 1

@@ -5,8 +5,8 @@ local shader = class:new({
 })
 
 function shader:__init(orig)
-	if not self.filter then return end
-	self.object = love.graphics.newShader(self.filter)
+	if not self.code then return end
+	self.object = love.graphics.newShader(self.code)
 	self.styles.default = self.varibles
 	self:setStyle( "default" , false )
 end

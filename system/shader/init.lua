@@ -1,2 +1,2 @@
 system.shader.shader = require "system/shader/shader"
-system.shader.filter = require "system/shader/filter"
+system.shader.outline = require "system/shader/outline"

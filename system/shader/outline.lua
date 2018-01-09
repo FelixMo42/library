@@ -1,5 +1,5 @@
 local outline = system.shader.shader:new({
-	outline = "system/shader/outline.glsl",
+	code = "system/shader/outline.glsl",
 	varibles = {
 		kernel = {
 			{ -1 , -1 , -1 },

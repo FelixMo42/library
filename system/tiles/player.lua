@@ -38,7 +38,9 @@ function player:__init()
 end
 
 function player:__tostring()
-	return system.tiles:tostring( self )
+	return system.tiles:tostring( self , {
+		tile = function() return "" end
+	} )
 end
 
 function player:draw(x, y, s)

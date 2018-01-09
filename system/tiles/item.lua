@@ -6,7 +6,9 @@ local item = class:new({
 --functions
 
 function item:__tostring()
-	return system.tiles:tostring( self )
+	return system.tiles:tostring( self , {
+		tile = function() return "" end
+	} )
 end
 
 function item:draw(x,y,s)
