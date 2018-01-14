@@ -1,6 +1,8 @@
 local element = class:new({
+	type = "element",
 	x = 0, y = 0, pixs = {},
-	func = function() end
+	func = function() end,
+	visible = true
 })
 
 function element:__init()
@@ -12,9 +14,9 @@ end
 
 function element:render()
 	love.graphics.setCanvas( self.canvas )
-	self.func()
-	local imgData = self.canvas:newImageData()
 	love.graphics.clear()
+	self:func()
+	local imgData = self.canvas:newImageData()
 	love.graphics.setCanvas()
 	for x = 0, imgData:getWidth() - 1 do
 		for y = 0, imgData:getHeight() - 1 do
@@ -22,25 +24,19 @@ function element:render()
 			if not self[x] then self[x] = {} end
 			if a == 0 then
 				if self[x] and self[x][y] and self[x][y].color[4] ~= 0 then
-					self[x][y] = self.grid:setPixel(x,y,{r, g, b, a},self)
+					self[x][y] = self.grid:setPixel(x,y,self,{r, g, b, a})
 				end
 			else
-				self[x][y] = self.grid:setPixel(x,y,{r, g, b, a},self)
+				self[x][y] = self.grid:setPixel(x,y,self,{r, g, b, a})
 			end
 		end
 	end
 end
 
-function element:savePixel(x,y,r, g, b, a)
-	if not self[x] then
-		self[x] = self[x] or {}
+function element:mousereleased(x,y)
+	if self.func then
+		self:func(x,y)
 	end
-	if self[x][y] then
-		self[x][y].color = {r,g,b,a}
-	else
-		self[x][y] = self.grid:setPixel(x,y,{r,g,b,a},self)
-	end
-	self[x][y].show = a == 0
 end
 
 return element
