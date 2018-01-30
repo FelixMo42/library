@@ -81,7 +81,14 @@ end
 
 function object.child:clear(new)
 	for k , v in pairs(self) do
-		if rawtype(v) == "table" then self[k] = nil end
+		self[k] = nil
+	end
+	for k , v in pairs(object.child) do
+		if type(v) == "table" then
+			self[k] = table.copy(v)
+		else
+			self[k] = v
+		end
 	end
 end
 

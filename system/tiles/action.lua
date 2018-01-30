@@ -9,13 +9,6 @@ local action = class:new({
 
 --functions
 
-setmetatable( action.styles , {
-	__type = function() return "data" end,
-	__index = { add = function(self,name,value)
-		self[name] = value
-	end }
-} )
-
 function action:__call(x,y,...)
 	--cheak if possible
 	if not self.player then return false end
@@ -25,7 +18,7 @@ function action:__call(x,y,...)
 	if self.drawFunc then
 		self.player.queue:add(self, x,y)
 	end
-	return (self.func or self.styles[self.style].func)(self , x,y , ...) or true
+	return (self.func or self.styles[self.style].func)(self, x,y , ...) or true
 end
 
 function action:__tostring()
@@ -42,6 +35,17 @@ function action:damage(t)
 	t:HP( -math.random( self.Dmin , self.Dmax ) , self.Dtype , self.player )
 end
 
+function action:draw(sx,sy , ex,ey)
+	self.styles[self.style].draw(self, sx,sy , ex,ey)
+end
+
+setmetatable( action.styles , {
+	__type = function() return "data" end,
+	__index = { add = function(self,name,value)
+		self[name] = value
+	end }
+} )
+
 action.styles:add( "bolt" , {
 	func = function(self,x,y,...)
 		if self.player.map[x][y].player then
@@ -50,6 +54,11 @@ action.styles:add( "bolt" , {
 	end,
 	possible = function(self,x,y,...)
 		return system.tiles.path:line(self.player.map , self.player.x,self.player.y , x,y , self)
+	end,
+	draw = function(self, sx,sy , ex,ey)
+		love.graphics.setColor( system.ui.color.black )
+		love.graphics.line(sx,sy , ex,ey)
+		love.graphics.circle("line",ex,ey,system.settings.tiles.scale/2 + system.settings.tiles.scale * (self.width - 1))
 	end
 })
 
@@ -72,12 +81,37 @@ system.tiles.actions.move = action:new({
 		self.gy = self.gy + ( math.sign(y - self.py) * dt * system.settings.tiles.speed * d )
 		local cx = math.abs(self.gx - self.px) >= math.abs(x - self.px)
 		local cy = math.abs(self.gy - self.py) >= math.abs(y - self.py)
+		local s = "F"
+		if x - self.px < 0 then
+			s = "right"
+		elseif x - self.px > 0 then
+			s = "left"
+		elseif y - self.py < 0 then
+			s = "back"
+		elseif y - self.py > 0 then
+			s = "front"
+		end
 		if cx and cy then
 			self.gx, self.gy = x, y
 			self.px, self.py = nil, nil
+			if self.sprites and self.sprites[s] then
+				self.sprite = self.sprites[s][0]
+			end
 			return false
 		end
+		if self.sprites and self.sprites[s] then
+			local n = (math.floor(self.px + self.py) % (#self.sprites[s] * 2)) + 1
+			if n % 2 == 0 then
+				self.sprite = self.sprites[s][n / 2]
+			else
+				self.sprite = self.sprites[s][0]
+			end
+		end
 		return true
+	end,
+	draw = function(self,sx,sy,ex,ey)
+		love.graphics.setColor( system.ui.color.black )
+		love.graphics.circle("line",ex,ey,system.settings.tiles.scale/2 )
 	end
 })
 

@@ -17,7 +17,9 @@ end
 function grid:dofunc(f,...)
 	local inpt = {...}
 	local x, y = inpt[1], inpt[2]
-	if type(x) == "number" and type(y) == "number" then
+	if self[f] then
+		self[f](self,...)
+	elseif type(x) == "number" and type(y) == "number" then
 		if self[x] and self[x][y] then
 			for i = #self[x][y], 1 , -1 do
 				if self[x][y][i].dofunc then
@@ -27,8 +29,6 @@ function grid:dofunc(f,...)
 				end
 			end
 		end
-	elseif self[f] then
-		self[f](self)
 	end
 end
 
@@ -141,7 +141,7 @@ end
 
 function grid:draw()
 	love.graphics.setColor( color.white )
-	love.graphics.rectangle("line",self.minX,self.minY , self.maxX, self.maxY)
+	love.graphics.rectangle("line",self.minX - 1,self.minY - 1, self.maxX + 2, self.maxY + 2)
 	love.graphics.draw( self.canvas )
 end
 
@@ -183,7 +183,7 @@ end
 
 function grid:getLeftWall(x,y,w,h,m)
 	local max = math.max(x + m , self.minY)
-	for x = math.floor(x + x), math.ceil(max), -1 do
+	for x = math.floor(x), math.ceil(max), -1 do
 		for y = math.ceil(y), math.floor(y + h - 1) do
 			if self[x] and self[x][y] and self[x][y][0] then
 				return x + 1
@@ -191,6 +191,18 @@ function grid:getLeftWall(x,y,w,h,m)
 		end
 	end
 	return max
+end
+
+function grid:mousereleased(x,y,...)
+	f = "mousereleased"
+	if self[x] and self[x][y] then
+		for i = #self[x][y], 1 , -1 do
+			love.errhand( self[x][y][i].grid )
+			if self[x][y][i][f] then
+				self[x][y][i][f]( self[x][y][f] , x , y )
+			end
+		end
+	end
 end
 
 return grid

@@ -94,24 +94,6 @@ function ipairs(t,d,...)
 	end, t, init
 end
 
---[[function inext(t, var, a)
-	var = var + a
-	local value = t[var]
-	if value == nil then return end
-	return var, value
-end
-
-function ipairs(t,i,...)
-	if not t then
-		love.errhand("ipairs expectes table")
-		love.event.quit()
-	end
-	local mt = getmetatable(t)
-	if mt and mt["__ipairs"] then return mt["__ipairs"](t,...) end
-	local init = (i or 1) > 0 and 0 or #t
-	return funk, t, init, d
-end]]
-
 rawpairs = pairs
 
 function pairs(t,i,...)
