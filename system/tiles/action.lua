@@ -81,7 +81,7 @@ system.tiles.actions.move = action:new({
 		self.gy = self.gy + ( math.sign(y - self.py) * dt * system.settings.tiles.speed * d )
 		local cx = math.abs(self.gx - self.px) >= math.abs(x - self.px)
 		local cy = math.abs(self.gy - self.py) >= math.abs(y - self.py)
-		local s = "F"
+		local s = "front"
 		if x - self.px < 0 then
 			s = "right"
 		elseif x - self.px > 0 then

@@ -13,12 +13,23 @@ function spriteSheet:addSprite(name,x,y,w,h,sx,sy)
 	local quad = love.graphics.newQuad( x * self.size,y * self.size,w * self.size,h * self.size , self.img:getDimensions() )
 	local width = self.size
 	local height = self.size
-	self.sprites[name] = function(x,y,w,h)
-		love.graphics.draw(self.img, quad, x - sx * w,y - sy * h, 0 , w / width , h / height)
+	self.sprites[name] = function(dx,dy,dw,dh)
+		local s = x + y + w + h --save them for upvales
+		love.graphics.draw(self.img, quad, dx - sx * w,dy - sy * h, 0 , dw / width , dh / height)
 	end
 	return self.sprites[name]
 end
 
+function spriteSheet:deletSprite(targ)
+	for k , v in pairs(self.sprites) do
+		if k == targ or v == targ then
+			local sprite = self.sprites[name]
+			self.sprites[name] = nil
+			return name
+		end
+	end
+end
+
 system.tiles.spriteSheets = {}
 
-return spriteSheets
+return spriteSheet

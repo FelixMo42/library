@@ -53,10 +53,23 @@ function object:addChild(c,i,n)
 		i = n
 	end
 	i = i or #self.child + 1
+	c.parent = self.child.parent
+	table.insert(self.child , i , c)
+	return c
+end
+
+function object:deletChild(c,i,n)
+	if type(i) == "string" then
+		self.child[i] = c
+		i = n
+	end
+	i = i or #self.child + 1
 	c.parent = self
 	table.insert(self.child , i , c)
 	return c
 end
+
+object.child.parent = object
 
 function object.child:is(var)
 	local is = false
@@ -80,15 +93,8 @@ function object.child:get(var)
 end
 
 function object.child:clear(new)
-	for k , v in pairs(self) do
+	for k , v in ipairs(self) do
 		self[k] = nil
-	end
-	for k , v in pairs(object.child) do
-		if type(v) == "table" then
-			self[k] = table.copy(v)
-		else
-			self[k] = v
-		end
 	end
 end
 
