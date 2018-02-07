@@ -19,6 +19,7 @@ function system.tiles:globolize()
 	settings = system.settings
 	path = system.tiles.path
 	spriteSheet = system.tiles.spriteSheet
+
 	spriteSheets = system.tiles.spriteSheets
 
 	skill = system.tiles.skill
@@ -73,7 +74,7 @@ function system.tiles:format(data, exceptions)
 			if c ~= "" and c ~= " "  then
 				s = s..c..", "
 			end
-		elseif type( v ) ~= "function" then
+		elseif type(v) ~= "function" and type(v) ~= "userdata" then
 			if table.format( data[k] ) ~= table.format( def[k] ) then
 				s = table.format(k , s.."[")
 				s = table.format(v , s.."] = ")..", "
@@ -98,7 +99,7 @@ function system.tiles:load(class)
 end
 
 function system.tiles:loadAll()
-	local classes = {"skills","items","objects","players","tiles","maps"} --add back actions eventualy
+	local classes = {"spriteSheets","skills","items","objects","players","tiles","maps"} --add back actions eventualy
 	for i , c in pairs( classes ) do
 		self:load( c )
 	end

@@ -17,7 +17,7 @@ function table.format(self, s, tables)
     end
     local s = s.."{"
     for k , v in pairs(self) do
-        if type(v) ~= "function" then
+        if type(v) ~= "function" and type(v) ~= "userdata" then
             if type(v) == "table" and not tables[v] then
                 tables[v] = #tables + 1
                 s = table.format(v , "local T"..tables[v].." = " , tables).."\n"..s

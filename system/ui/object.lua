@@ -73,7 +73,7 @@ object.child.parent = object
 
 function object.child:is(var)
 	local is = false
-	for k , item in pairs(self) do
+	for k , item in ipairs(self) do
 		if rawtype(item) == "table" then
 			if item[var] then is = item[var] or is end
 			if #(item.child or {}) > 0 and item.child.is then
