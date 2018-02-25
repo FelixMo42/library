@@ -48,19 +48,15 @@ function tile:drawTile(x,y,s)
 end
 
 function tile:drawItem(x,y,s)
-	local s = s or system.settings.tiles.scale
 	local x = x or (self.x - self.map.x) * system.settings.tiles.scale
 	local y = y or (self.y - self.map.y) * system.settings.tiles.scale
 	--item
 	if self.item then
-		self.item:draw(x,y,s)
+		self.item:draw(x,y,system.settings.tiles.scale)
 	end
 end
 
 function tile:drawPlayer(x,y,s)
-	local s = s or system.settings.tiles.scale
-	local x = x or (self.x - self.map.x) * system.settings.tiles.scale
-	local y = y or (self.y - self.map.y) * system.settings.tiles.scale
 	--player
 	if self.player then
 		self.player:draw()
@@ -68,12 +64,11 @@ function tile:drawPlayer(x,y,s)
 end
 
 function tile:drawObject(x,y,s)
-	local s = s or system.settings.tiles.scale
 	local x = x or (self.x - self.map.x) * system.settings.tiles.scale
 	local y = y or (self.y - self.map.y) * system.settings.tiles.scale
 	--object
 	if self.object and self.object.tile == self then
-		self.object:draw(x,y,s)
+		self.object:draw(x,y,system.settings.tiles.scale)
 	end
 end
 

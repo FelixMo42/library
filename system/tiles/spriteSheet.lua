@@ -8,8 +8,16 @@ local spriteSheet = class:new({
 function spriteSheet:__init()
 	setmetatable(self.sprites , { __index = {} })
 
-	if not self.img then return end
+	if not self.img then
+		if self.path then
+			self.img = self.path
+		else
+			return
+		end
+	end
+	
 	if type(self.img) == "string" then self.path = self.img end
+	love.graphics.setDefaultFilter( "nearest", "nearest" )
 	self.img = love.graphics.newImage(self.img)
 
 	for id , sprite in pairs(self.sprites) do
@@ -25,11 +33,12 @@ function spriteSheet:creatSprite(name,x,y,w,h,sx,sy,id)
 			this.quad = love.graphics.newQuad(this.x * self.size,this.y * self.size,this.w * self.size,this.h * self.size , self.img:getDimensions() )
 		end
 	} , {
+		__type = "sprite",
 		__tostring = function(this)
 			return "spriteSheet."..self.file..".sprites["..this.id.."]"
 		end,
 		__call = function(this,dx,dy,dw,dh)
-			love.graphics.draw(self.img, this.quad, dx - this.sx * this.w,dy - this.sy * this.h, 0 , dw / self.size,dh / self.size)
+			love.graphics.draw(self.img, this.quad, dx - this.sx * dh,dy - this.sy * dw, 0 , dw / self.size,dh / self.size)
 		end
 	} )
 end

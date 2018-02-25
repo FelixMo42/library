@@ -7,6 +7,7 @@ function love.graphics.prints(t,x,y,w,h,xa,ya)
 		y = y + h - love.graphics.getTextHeight(t,w)
 	end
 	love.graphics.printf(t,x,y,w,xa or "center")
+	return y
 end
 
 function love.graphics.getTextHeight(t,w)

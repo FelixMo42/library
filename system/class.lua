@@ -17,7 +17,7 @@ local metamethode = {
 	__newindex = function(self , key , value)
 		local mt = getmetatable(self)
 		if mt.__set and mt.__set(mt.__values , key , value) ~= false then return end
-		if mt.__setter[key] and mt.__setter[k](mt.__values , value , key) ~= false then return end
+		if mt.__setter[key] and mt.__setter[key](mt.__values , value , key) ~= false then return end
 		mt.__values[key] = value
 	end,
 	__setmetatable = function(self , new)

@@ -28,7 +28,13 @@ function system.update.addmetamethod(k,p)
 	end
 	_G[k] = function(i,...)
 		local mt = getmetatable(i)
-		if mt and mt["__"..k] then return mt["__"..k](i,...) end
+		if mt and mt["__"..k] then
+			if type(mt["__"..k]) == "function" then
+				return mt["__"..k](i,...)
+			else
+				return mt["__"..k]
+			end
+		end
 		return _G[p..k](i,...)
 	end
 end

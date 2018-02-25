@@ -37,7 +37,7 @@ system.filesystem.read = function(self,path)
 	if not file then
 		return love.errhand("Cannot find file: "..path.." | using path: "..self:path(path))
 	end
-	local r = file:read("*a")
+	local r = file:read("*all")
 	file:close()
 	return r
 end
